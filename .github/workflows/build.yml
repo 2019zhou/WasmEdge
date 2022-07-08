@@ -206,6 +206,7 @@ jobs:
             coverage: true
     name: Ubuntu 20.04 with ${{ matrix.name }}
     runs-on: ubuntu-latest
+    needs: [get_version_v2]
     container:
       image: wasmedge/wasmedge:${{ matrix.docker_tag }}
     steps:
@@ -218,7 +219,7 @@ jobs:
         CMAKE_BUILD_TYPE: ${{ matrix.build_type }}
       run: |
         git config --global --add safe.directory $(pwd)
-        cmake -Bbuild -GNinja -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE -DWASMEDGE_BUILD_TESTS=ON .
+        cmake -Bbuild -GNinja -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE -DWASMEDGE_BUILD_PACKAGE="TGZ" -DWASMEDGE_BUILD_TESTS=ON .
         cmake --build build
     - name: Test WasmEdge
       if: ${{ ! matrix.coverage }}
@@ -228,6 +229,10 @@ jobs:
         ./tools/wasmedge/wasmedge -v
         ctest
         cd -
+    - name: Build ${{ matrix.name }} package
+      if: ${{ ! matrix.coverage }}
+      run: |
+        cmake --build build --target package
     - name: Build WasmEdge using ${{ matrix.compiler }} with Coverage mode
       if: ${{ matrix.coverage }}
       run: |
@@ -247,6 +252,12 @@ jobs:
         name: codecov-wasmedge
         fail_ci_if_error: true
         path_to_write_report: ./build/codecov_report.gz
+    - name: Upload artifact (v2)
+      uses: actions/upload-artifact@v2
+      if: ${{ ! matrix.coverage }}
+      with:
+        name: WasmEdge-${{ needs.get_version_v2.outputs.version }}-${{ matrix.docker_tag }}.tar.gz
+        path: build/WasmEdge-${{ needs.get_version_v2.outputs.version }}-Linux.tar.gz
 
   build_manylinux:
     strategy:
