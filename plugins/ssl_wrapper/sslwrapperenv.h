@@ -14,12 +14,9 @@
 namespace WasmEdge {
 namespace Host {
 
-class HttpsReqEnvironment {
+class SslWrapperEnvironment {
 public:
-  std::string Host;
-  uint32_t Port;
-  std::string BodyStr;
-  std::string Rcv;
+  uint32_t Sfd;
 
   /// Initial Configurations
   static Plugin::PluginRegister Register;

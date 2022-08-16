@@ -4,19 +4,19 @@
 #pragma once
 
 #include "common/errcode.h"
-#include "httpsreqenv.h"
+#include "sslwrapperenv.h"
 #include "runtime/hostfunc.h"
 
 namespace WasmEdge {
 namespace Host {
 
-template <typename T> class HttpsReq : public Runtime::HostFunction<T> {
+template <typename T> class SslWrapper : public Runtime::HostFunction<T> {
 public:
-  HttpsReq(HttpsReqEnvironment &HostEnv)
+  SslWrapper(SslWrapperEnvironment &HostEnv)
       : Runtime::HostFunction<T>(0), Env(HostEnv) {}
 
 protected:
-  HttpsReqEnvironment &Env;
+  SslWrapperEnvironment &Env;
 };
 
 } // namespace Host

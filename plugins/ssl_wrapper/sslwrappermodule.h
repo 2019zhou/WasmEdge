@@ -3,21 +3,21 @@
 
 #pragma once
 
-#include "httpsreqenv.h"
+#include "sslwrapperenv.h"
 #include "runtime/instance/module.h"
 #include <cstdint>
 
 namespace WasmEdge {
 namespace Host {
 
-class HttpsReqModule : public Runtime::Instance::ModuleInstance {
+class SslWrapperModule : public Runtime::Instance::ModuleInstance {
 public:
-  HttpsReqModule();
+  SslWrapperModule();
 
-  HttpsReqEnvironment &getEnv() { return Env; }
+  SslWrapperEnvironment &getEnv() { return Env; }
 
 private:
-  HttpsReqEnvironment Env;
+  SslWrapperEnvironment Env;
 };
 
 } // namespace Host
